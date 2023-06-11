@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tooltip test</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script>
+    // React component: Tooltip
+    const Tooltip = ({ position, children }) => {
+      const [isTooltipVisible, setTooltipVisible] = React.useState(false);
+
+      const handleMouseEnter = () => {
+        setTooltipVisible(true);
+      };
+
+      const handleMouseLeave = () => {
+        setTooltipVisible(false);
+      };
+
+      const getTooltipStyle = () => {
+        switch (position) {
+          case 'top':
+            return { top: '-100%', left: '50%', transform: 'translateX(-50%)' };
+          case 'bottom':
+            return { top: '100%', left: '50%', transform: 'translateX(-50%)' };
+          case 'right':
+            return { top: '50%', left: '100%', transform: 'translateY(-50%)' };
+          case 'left':
+            return { top: '50%', left: '-100%', transform: 'translateY(-50%)' };
+          default:
+            return {};
+        }
+      };
+
+      return (
+        React.createElement('div', { className: 'tooltip-container', onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave },
+          React.createElement('button', { className: 'tooltip-button' }, children),
+          isTooltipVisible && (
+            React.createElement('div', { className: `tooltip ${position}`, style: getTooltipStyle() },
+              "Thanks for hovering! I'm a tooltip"
+            )
+          )
+        )
+      );
+    };
+
+    // React component: App
+    const App = () => {
+      return (
+        React.createElement('div', null,
+          React.createElement('h1', null, 'Tooltip Test'),
+          React.createElement(Tooltip, { position: 'top' },
+            React.createElement('button', null, 'Hover over me')
+          )
+        )
+      );
+    };
+
+    // Render the App component to the DOM
+    const rootElement = document.getElementById('root');
+    ReactDOM.render(React.createElement(App), rootElement);
+  </script>
+</body>
+
+</html>
